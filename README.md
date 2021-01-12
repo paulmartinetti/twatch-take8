@@ -2,6 +2,9 @@
 
 <p>
 Author - experienced dad and programmer, new to Arduino, C++, got a couple ttgo 2020s for my 12 yo son and me. We like the retro look. A flick of the wrist wakes up the watch from light sleep. Battery lasts all day. Wifi connection updates time, working on simple weather read-out
+<br>
+<br>
+NOTE - there are 4 vars needed for this to work: your wifi ssid, pw, your lat/lon coordinates, and your connection to api.bigdatacloud.net and api.openweathermap.org (key needed) or whatever data you want to pull..
 </p>
 
 <p>
