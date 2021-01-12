@@ -22,6 +22,7 @@ void appWiFiTime() {
   while (WiFi.status() != WL_CONNECTED) {}
 
   configTime(-18000, 3600 , "pool.ntp.org", "time.nis.gov");
+  // Connecting...
   delay(3000);
 
   struct tm timeinfo;
@@ -49,7 +50,8 @@ void appWiFiTime() {
   }  else {
     Serial.print("get failed");
   }
-
+  http.end();
+  
   // weather
   const size_t capacity = JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + 3 * JSON_OBJECT_SIZE(6) + 2 * JSON_OBJECT_SIZE(8) + JSON_OBJECT_SIZE(14) + 1050;
   DynamicJsonDocument doc(capacity);
@@ -59,18 +61,22 @@ void appWiFiTime() {
   filter["locality"] = true;
   DeserializationError err = deserializeJson(doc, locale, DeserializationOption::Filter(filter));
 
-  char CITY[60] = {NULL};
+  char city[60] = {NULL};
   if (doc["locality"]) {
-    strncpy(CITY, doc["locality"], 60);
+    strncpy(city, doc["locality"], 60);
   } else {
     Serial.print(err.c_str());
   }
-  //Serial.print(CITY);
+  //Serial.print(city);
   tft->setCursor(0, 120);
-  tft->println(CITY);
-  http.end();
+  tft->println(city);
+  // city from bigdata
+  delay(1000);
+  tft->println(" ");
+  tft->println("Checking weather...");
+  delay(4000);
 
-  //========= weather api call
+  //========= weather api call, new http client bc haven't figured out how to reset
   // get weather name using latitude / longitude
   String weather;
   //char locationURL[200];
@@ -86,9 +92,11 @@ void appWiFiTime() {
   }  else {
     Serial.print("get failed");
   }
-
+  http2.end();
   // parse
   DynamicJsonDocument doc2(capacity);
+
+  // organize weather data
   struct myTemp {
     float temp;
     float feels;
@@ -97,6 +105,8 @@ void appWiFiTime() {
     float wind;
     float clouds;
   };
+  typedef struct myTemp MyTemp;
+  MyTemp myTemp;
 
   // from this source, filter wanted info
   StaticJsonDocument<200> filter2;
@@ -116,14 +126,14 @@ void appWiFiTime() {
   } else {
     Serial.print("temp "); Serial.println(err2.c_str());
   }
-  
+
   // feels like
   if (doc2["main"]["feels_like"]) {
     myTemp.feels = doc2["main"]["feels_like"];
   } else {
     Serial.print("feels like "); Serial.println(err2.c_str());
   }
-  
+
   // temp max
   if (doc2["main"]["temp_max"]) {
     myTemp.tMax = doc2["main"]["temp_max"];
@@ -144,21 +154,37 @@ void appWiFiTime() {
   } else {
     Serial.print("wind "); Serial.println(err2.c_str());
   }
-  
+
+  // clouds
+  if (doc2["clouds"]["all"]) {
+    myTemp.clouds = doc2["clouds"]["all"];
+  } else {
+    Serial.print("clouds "); Serial.println(err2.c_str());
+  }
+
   //Serial.print(myTemp);
-  tft->setCursor(0, 170);
-  tft->print("Temp: "); tft->print(myTemp);
-  http2.end();
-  /**
-      printf("Current Temp : % .0f\n", OWOC.current->temperature);
-      printf("Current Humidity : % .0f\n", OWOC.current->humidity);
-  */
+  tft->fillScreen(TFT_BLACK);
+  tft->setCursor(0, 10);
+  tft->println("Weather");
+  tft->print("Temp: "); tft->println(myTemp.temp);
+  tft->println(" ");
+  tft->print("Real feel: "); tft->println(myTemp.feels);
+  tft->println(" ");
+  tft->print("Tmax: "); tft->println(myTemp.tMax);
+  tft->println(" ");
+  tft->print("Humidity: "); tft->println(myTemp.humidity);
+  tft->println(" ");
+  tft->print("Wind: "); tft->println(myTemp.wind);
+  tft->println(" ");
+  tft->print("Clouds: "); tft->println(myTemp.clouds);
+  tft->println(" ");
+
 
   // close
-  delay(2000);
-  tft->setCursor(0, 210);
+  delay(5000);
+  //tft->setCursor(0, 220);
   tft->println("Disconnecting ...");
-  delay(2000);
+  delay(3000);
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
 
