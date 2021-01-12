@@ -1,14 +1,25 @@
 # WakeupFromSensor2
 
-# I'm using code from these brilliant folks and resources
+# experienced dad and programmer, new to Arduino, C++, got a couple ttgo 2020s for my 12 yo son and me. We like the retro look. A flick of the wrist wakes up the watch from light sleep. Battery lasts all day. Wifi connection updates time, working on simple weather read-out
 
-<A HREF="https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library" TARGET=_blank>The "official" watch library</A>
+Repository
+strengths - sleep and wake functions, light-weight state management
+weaknesses - err checking, compartmentalizing / reusing code, data-types..need to use more char's
 
-<A HREF="https://www.instructables.com/Lilygo-T-Watch-2020-Arduino-Framework/" TARGET=_blank>Dan Geiger's watch code</A>
 
-<A HREF="https://diyprojects.io/t-watch-sleep-and-wake-up-with-bma423-accelerometer-or-esp32-button/#.X_NqVOlKjlw" TARGET=_blank>DIY Projects - Fr / En</A>
+# vvv--I'm using bits of code from these brilliant folks and resources--vvv
 
-<A HREF="https://github.com/JHershey69/OpenWeatherOneCall" TARGET=_blank>JHershey OpenWeatherOneCall library</A>
+The "official" watch library
+https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library
+
+Dan Geiger's watch code
+https://www.instructables.com/Lilygo-T-Watch-2020-Arduino-Framework/
+
+DIY Projects - Fr / En
+https://diyprojects.io/t-watch-sleep-and-wake-up-with-bma423-accelerometer-or-esp32-button/#.X_NqVOlKjlw
+
+J Hershey's OpenWeatherOneCall library
+https://github.com/JHershey69/OpenWeatherOneCallJHershey 
 
 Date time formatting in C++
 http://www.cplusplus.com/reference/ctime/strftime/

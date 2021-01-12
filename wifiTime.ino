@@ -6,9 +6,6 @@
 
 void appWiFiTime() {
 
-  const char* ssid     = "";
-  const char* password = "";
-
   const char* ntpServer = "pool.ntp.org";
   const long  gmtOffset_sec = -18000;
   const int   daylightOffset_sec = 3600;
@@ -41,7 +38,7 @@ void appWiFiTime() {
   HTTPClient http;
   String locale;
   //char locationURL[200];
-  http.begin("local");
+  http.begin(regionURL);
   int httpCode = http.GET();
   if (httpCode > 399) {
     Serial.print("http error");
@@ -60,8 +57,8 @@ void appWiFiTime() {
   filter["locality"] = true;
   DeserializationError err = deserializeJson(doc, locale, DeserializationOption::Filter(filter));
   char CITY[60] = {NULL};
-  if (doc["locality"]){
-    strncpy(CITY,doc["locality"],60);
+  if (doc["locality"]) {
+    strncpy(CITY, doc["locality"], 60);
   } else {
     Serial.print(err.c_str());
   }
@@ -69,13 +66,13 @@ void appWiFiTime() {
   tft->setCursor(0, 120);
   tft->println(CITY);
   http.end();
-  
+
   //========= weather api call
   // get weather name using latitude / longitude
   String weather;
   //char locationURL[200];
   HTTPClient http2;
-  http2.begin("");
+  http2.begin(oweatherURL);
   httpCode = http2.GET();
   if (httpCode > 399) {
     Serial.print("http error");
@@ -86,6 +83,20 @@ void appWiFiTime() {
   }  else {
     Serial.print("get failed");
   }
+  DynamicJsonDocument doc2(capacity);
+  // from this source, only interested in locality name
+  StaticJsonDocument<200> filter2;
+  filter2["main"]["feels_like"] = true;
+  DeserializationError err2 = deserializeJson(doc2, weather, DeserializationOption::Filter(filter2));
+ float mytemp;
+  if (doc2["main"]["feels_like"]) {
+    mytemp = doc2["main"]["feels_like"];
+  } else {
+    Serial.print("here "); Serial.println(err2.c_str());
+  }
+  Serial.print(mytemp);
+  tft->setCursor(0, 170);
+  tft->print("Temp: "); tft->print(mytemp);
   http2.end();
   /**
       printf("Current Temp : % .0f\n", OWOC.current->temperature);
