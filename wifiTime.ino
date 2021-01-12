@@ -50,12 +50,15 @@ void appWiFiTime() {
     Serial.print("get failed");
   }
 
+  // weather
   const size_t capacity = JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + 3 * JSON_OBJECT_SIZE(6) + 2 * JSON_OBJECT_SIZE(8) + JSON_OBJECT_SIZE(14) + 1050;
   DynamicJsonDocument doc(capacity);
+
   // from this source, only interested in locality name
   StaticJsonDocument<200> filter;
   filter["locality"] = true;
   DeserializationError err = deserializeJson(doc, locale, DeserializationOption::Filter(filter));
+
   char CITY[60] = {NULL};
   if (doc["locality"]) {
     strncpy(CITY, doc["locality"], 60);
@@ -83,20 +86,68 @@ void appWiFiTime() {
   }  else {
     Serial.print("get failed");
   }
+
+  // parse
   DynamicJsonDocument doc2(capacity);
-  // from this source, only interested in locality name
+  struct myTemp {
+    float temp;
+    float feels;
+    float tMax;
+    float humidity;
+    float wind;
+    float clouds;
+  };
+
+  // from this source, filter wanted info
   StaticJsonDocument<200> filter2;
+  filter2["main"]["temp"] = true;
   filter2["main"]["feels_like"] = true;
+  filter2["main"]["temp_max"] = true;
+  filter2["main"]["humidity"] = true;
+  filter2["wind"]["speed"] = true;
+  filter2["clouds"]["all"] = true;
+
   DeserializationError err2 = deserializeJson(doc2, weather, DeserializationOption::Filter(filter2));
- float mytemp;
-  if (doc2["main"]["feels_like"]) {
-    mytemp = doc2["main"]["feels_like"];
+
+  // capture values
+  // temp
+  if (doc2["main"]["temp"]) {
+    myTemp.temp = doc2["main"]["temp"];
   } else {
-    Serial.print("here "); Serial.println(err2.c_str());
+    Serial.print("temp "); Serial.println(err2.c_str());
   }
-  Serial.print(mytemp);
+  
+  // feels like
+  if (doc2["main"]["feels_like"]) {
+    myTemp.feels = doc2["main"]["feels_like"];
+  } else {
+    Serial.print("feels like "); Serial.println(err2.c_str());
+  }
+  
+  // temp max
+  if (doc2["main"]["temp_max"]) {
+    myTemp.tMax = doc2["main"]["temp_max"];
+  } else {
+    Serial.print("temp max "); Serial.println(err2.c_str());
+  }
+
+  // humidity
+  if (doc2["main"]["humidity"]) {
+    myTemp.humidity = doc2["main"]["humidity"];
+  } else {
+    Serial.print("humidity "); Serial.println(err2.c_str());
+  }
+
+  // wind speed
+  if (doc2["wind"]["speed"]) {
+    myTemp.wind = doc2["wind"]["speed"];
+  } else {
+    Serial.print("wind "); Serial.println(err2.c_str());
+  }
+  
+  //Serial.print(myTemp);
   tft->setCursor(0, 170);
-  tft->print("Temp: "); tft->print(mytemp);
+  tft->print("Temp: "); tft->print(myTemp);
   http2.end();
   /**
       printf("Current Temp : % .0f\n", OWOC.current->temperature);

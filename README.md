@@ -19,7 +19,7 @@ DIY Projects - Fr / En
 https://diyprojects.io/t-watch-sleep-and-wake-up-with-bma423-accelerometer-or-esp32-button/#.X_NqVOlKjlw
 
 J Hershey's OpenWeatherOneCall library
-https://github.com/JHershey69/OpenWeatherOneCallJHershey 
+https://github.com/JHershey69/OpenWeatherOneCall 
 
 Date time formatting in C++
 http://www.cplusplus.com/reference/ctime/strftime/
