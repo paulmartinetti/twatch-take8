@@ -15,9 +15,10 @@ void appWiFiTime() {
 
   // wifi screen
   tft->fillScreen(TFT_BLACK);
+  //tft->setTextFont(2);
   tft->setTextSize(2);
   tft->setCursor(0, 110);
-  tft->println("Connecting ...");
+  tft->println(F("Connecting ..."));
 
   while (WiFi.status() != WL_CONNECTED) {}
 
@@ -36,7 +37,7 @@ void appWiFiTime() {
   }
 
   // get location name using latitude / longitude
-  HTTPClient http;
+  /*HTTPClient http;
   String locale;
   //char locationURL[200];
   http.begin(regionURL);
@@ -50,11 +51,11 @@ void appWiFiTime() {
   }  else {
     Serial.print("get failed");
   }
-  http.end();
+  http.end();*/
   
   // weather
   const size_t capacity = JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + 3 * JSON_OBJECT_SIZE(6) + 2 * JSON_OBJECT_SIZE(8) + JSON_OBJECT_SIZE(14) + 1050;
-  DynamicJsonDocument doc(capacity);
+  /*DynamicJsonDocument doc(capacity);
 
   // from this source, only interested in locality name
   StaticJsonDocument<200> filter;
@@ -70,11 +71,11 @@ void appWiFiTime() {
   //Serial.print(city);
   tft->setCursor(0, 120);
   tft->println(city);
-  // city from bigdata
+  // city from bigdata*/
   delay(1000);
-  tft->println(" ");
-  tft->println("Checking weather...");
-  delay(4000);
+  tft->setCursor(0, 170);
+  tft->println(F("Checking weather..."));
+  delay(2000);
 
   //========= weather api call, new http client bc haven't figured out how to reset
   // get weather name using latitude / longitude
@@ -82,7 +83,7 @@ void appWiFiTime() {
   //char locationURL[200];
   HTTPClient http2;
   http2.begin(oweatherURL);
-  httpCode = http2.GET();
+  int httpCode = http2.GET();
   if (httpCode > 399) {
     Serial.print("http error");
     http2.end();
@@ -183,7 +184,7 @@ void appWiFiTime() {
   // close
   delay(5000);
   //tft->setCursor(0, 220);
-  tft->println("Disconnecting ...");
+  tft->println(F("Disconnecting ..."));
   delay(3000);
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
