@@ -4,12 +4,14 @@
 Author - experienced dad and programmer, new to Arduino, C++, got a couple ttgo 2020s for my 12 yo son and me. We like the retro look. A flick of the wrist wakes up the watch from light sleep. Battery lasts all day. Wifi connection updates time, working on simple weather read-out
 <br>
 <br>
-Instructions:
-1. Open WakeupFromSensor2.ino in the Arduino IDE, say Yes to create a new folder with the same name.
+Instructions if new to Arduino -
+1. Create a New Folder named WakeupFromSensor2, put all of the repository files in it (.ino and .h files)
 <br>
-2. In config.h, replace the 4 placeholder variables with your info, see comments for details
+2. Open the folder and launch WakeupFromSensor2.ino in the Arduino IDE.
 <br>
-3. In wifiTime, there may be features commented out. I need time to compartmentalize the code. Thanks for your patience.
+3. In config.h, replace the 4 placeholder variables with your info, see comments for details
+<br>
+4. In wifiTime, there may be features commented out. I need time to compartmentalize the code. Thanks for your patience.
 </p>
 
 <p>
