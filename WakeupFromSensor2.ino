@@ -20,7 +20,7 @@ int mvBack = 0;
 // bma positive y value from returning wrist quickly to normal
 int mvFwd = 0;
 
-// used to control states
+// Using isAwake to control state and wake time
 /**
  * 0 = light sleep
  * <30 = awake for 3 seconds, listen to touch
@@ -28,6 +28,10 @@ int mvFwd = 0;
  *
  */
 uint8_t isAwake = 0;
+
+// TO KEEP AWAKE LONGER - increase this value to 50 or 90 for example
+// 30 = about 3 seconds because the loop() delay is 100;
+uint8_t timeAwake = 30;
 
 
 // timepiece
@@ -128,7 +132,7 @@ void loop() {
     // cancel on random slow movement
     if (diff > 5) mvBack = mvFwd = 0;
 
-    // very limited correct movement along y wakes up, note that !isAwake = 0
+    // 1. WAKE ..very limited correct movement along y wakes up, note that !isAwake = 0
     if (!isAwake && diff == 1) {
       // (Documents > Arduino > T-Watch-Projects-main > 11 wakeup axp202 minimal
       // wake from lightSleep
@@ -139,9 +143,9 @@ void loop() {
       displayTime(true);
       isAwake += 1;
     }
-    // 3s wake time, 
+    // 2. TOUCH LISTEN - during 3s wake time, 
     // when we write if(isAwake) that is asking if isAwake is true or >0
-    if (isAwake && isAwake < 30) {
+    if (isAwake && isAwake < timeAwake) {
       
       // listen for touch only while awake
       int16_t x, y;
@@ -154,8 +158,8 @@ void loop() {
       isAwake += 1;
     }
 
-    // to light sleep
-    if (isAwake >= 30) {
+    // 3. TO SLEEP - back to light sleep most of the time
+    if (isAwake >= timeAwake) {
       lightSleep();
       isAwake = 0;
     }

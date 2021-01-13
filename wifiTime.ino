@@ -19,8 +19,21 @@ void appWiFiTime() {
   tft->setTextSize(2);
   tft->setCursor(0, 110);
   tft->println(F("Connecting ..."));
-
-  while (WiFi.status() != WL_CONNECTED) {}
+  uint8_t tries = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(200);
+    tries++;
+    if (tries > 20) {
+      tft->fillScreen(TFT_BLACK);
+      tft->setTextSize(2);
+      tft->setCursor(0, 110);
+      tft->println(F("Unable to connect to WiFi"));
+      delay(3000);
+      WiFi.disconnect(true); // --this doesn't work right, it just hangs...looking into it
+      WiFi.mode(WIFI_OFF);
+      isAwake = timeAwake+1; // back to light sleep
+    }
+  }
 
   configTime(-18000, 3600 , "pool.ntp.org", "time.nis.gov");
   // Connecting...
@@ -28,7 +41,7 @@ void appWiFiTime() {
 
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo)) {
-    tft->drawString("Failed",  5, 30, 1);
+    tft->drawString("Failed to update time",  5, 30, 1);
   } else {
     tft->fillScreen(TFT_BLACK);
     tft->setCursor(0, 30);
@@ -38,40 +51,40 @@ void appWiFiTime() {
 
   // get location name using latitude / longitude
   /*HTTPClient http;
-  String locale;
-  //char locationURL[200];
-  http.begin(regionURL);
-  int httpCode = http.GET();
-  if (httpCode > 399) {
+    String locale;
+    //char locationURL[200];
+    http.begin(regionURL);
+    int httpCode = http.GET();
+    if (httpCode > 399) {
     Serial.print("http error");
     http.end();
-  } else if (httpCode > 0) {
+    } else if (httpCode > 0) {
     locale = http.getString();
     //Serial.print(locale);
-  }  else {
+    }  else {
     Serial.print("get failed");
-  }
-  http.end();*/
-  
+    }
+    http.end();*/
+
   // weather
   const size_t capacity = JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + 3 * JSON_OBJECT_SIZE(6) + 2 * JSON_OBJECT_SIZE(8) + JSON_OBJECT_SIZE(14) + 1050;
   /*DynamicJsonDocument doc(capacity);
 
-  // from this source, only interested in locality name
-  StaticJsonDocument<200> filter;
-  filter["locality"] = true;
-  DeserializationError err = deserializeJson(doc, locale, DeserializationOption::Filter(filter));
+    // from this source, only interested in locality name
+    StaticJsonDocument<200> filter;
+    filter["locality"] = true;
+    DeserializationError err = deserializeJson(doc, locale, DeserializationOption::Filter(filter));
 
-  char city[60] = {NULL};
-  if (doc["locality"]) {
+    char city[60] = {NULL};
+    if (doc["locality"]) {
     strncpy(city, doc["locality"], 60);
-  } else {
+    } else {
     Serial.print(err.c_str());
-  }
-  //Serial.print(city);
-  tft->setCursor(0, 120);
-  tft->println(city);
-  // city from bigdata*/
+    }
+    //Serial.print(city);
+    tft->setCursor(0, 120);
+    tft->println(city);
+    // city from bigdata*/
   delay(1000);
   tft->setCursor(0, 170);
   tft->println(F("Checking weather..."));
@@ -135,7 +148,7 @@ void appWiFiTime() {
     Serial.print("feels like "); Serial.println(err2.c_str());
   }
 
-  // temp max
+  // temp max -- not a forecast but the high temp du jour
   if (doc2["main"]["temp_max"]) {
     myTemp.tMax = doc2["main"]["temp_max"];
   } else {
@@ -190,5 +203,5 @@ void appWiFiTime() {
   WiFi.mode(WIFI_OFF);
 
   // ensure light sleep after disconnect
-  isAwake = 31;
+  isAwake = timeAwake+1;
 }
