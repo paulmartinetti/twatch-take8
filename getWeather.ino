@@ -11,7 +11,7 @@ const size_t capacity = JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(5) + JSON_OBJECT_SI
 // reusable HTTP Client for each api call
 String http(String myUri) {
 
-  // swap myUri for it's return json
+  // swap myUri for its return json
   HTTPClient http;
 
   http.begin(myUri);
@@ -38,21 +38,26 @@ void getWeather() {
 
   // display WiFi status on watch
   tft->fillScreen(TFT_BLACK);
-  //tft->setTextFont(2);
+  //tft->setTextFont(2); -- too big, still testing free fonts..
   tft->setTextSize(2);
   tft->setCursor(0, 110);
   tft->println(F("Connecting ..."));
 
+  // 
   while (WiFi.status() != WL_CONNECTED) {
-    delay(20000);
+    // sometimes my watch connects just after this times out
+    delay(30000);
+    tft->setCursor(0, 140);
     tft->println(F("Unable to connect to WiFi"));
   }
+
+  // WiFi get official time (from Arduino TimeSynchronization sample)
   const char* ntpServer = "pool.ntp.org";
   const long  gmtOffset_sec = -18000;
   const int   daylightOffset_sec = 3600;
 
   // might as well update clock while connected to wifi
-  configTime(-18000, 3600 , "pool.ntp.org", "time.nis.gov");
+  configTime(gmtOffset_sec, daylightOffset_sec , ntpServer, "time.nis.gov");
   // Connecting...
   delay(3000);
 
@@ -66,17 +71,19 @@ void getWeather() {
     watch->rtc->setDateTime(timeinfo.tm_year, timeinfo.tm_mon + 1, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
   }
 
-  // get location name using latitude / longitude
-  String locale = http(regionURL);
+  // use http client function above to get json of my region (var from config.h)
+  String localeJson = http(regionURL);
+  // check out json to find filter keys for desired values
+  Serial.print(localeJson);
 
-  // weather
+  // parse locale json into var called "doc" for document
   DynamicJsonDocument doc(capacity);
-
   // from this source, only interested in locality name
   StaticJsonDocument<200> filter;
   filter["locality"] = true;
-  DeserializationError err = deserializeJson(doc, locale, DeserializationOption::Filter(filter));
+  DeserializationError err = deserializeJson(doc, localeJson, DeserializationOption::Filter(filter));
 
+  // if locality info exists, display on watch
   char city[60] = {NULL};
   if (doc["locality"]) {
     strncpy(city, doc["locality"], 60);
@@ -88,15 +95,17 @@ void getWeather() {
   tft->println(city);
   // city from bigdata
   delay(1000);
+
+  // start weather check..
   tft->setCursor(0, 170);
   tft->println(F("Checking weather..."));
   delay(2000);
 
-  //========= weather api call, new http client bc haven't figured out how to reset
-  // get weather name using latitude / longitude
-  String weather = http(oweatherURL);
+  // using reusable http client, get weather json name using latitude / longitude (from config.h)
+  String weatherJson = http(oweatherURL);
+  //Serial.print(F(weatherJson));
 
-  // parse
+  // parse weather json into doc2
   DynamicJsonDocument doc2(capacity);
 
   // organize weather data
@@ -119,11 +128,11 @@ void getWeather() {
   filter2["main"]["humidity"] = true;
   filter2["wind"]["speed"] = true;
   filter2["clouds"]["all"] = true;
+  // de-serialize
+  DeserializationError err2 = deserializeJson(doc2, weatherJson, DeserializationOption::Filter(filter2));
 
-  DeserializationError err2 = deserializeJson(doc2, weather, DeserializationOption::Filter(filter2));
-
-  // capture values
-  // temp
+  // capture available values using keys
+  // (hoping to find a way to loop this!)
   if (doc2["main"]["temp"]) {
     myTemp.temp = doc2["main"]["temp"];
   } else {
@@ -183,14 +192,15 @@ void getWeather() {
   tft->println(" ");
 
 
-  // close
+  // hold to read weather
   delay(5000);
+
+  // end awake session
   //tft->setCursor(0, 220);
   tft->println(F("Disconnecting ..."));
   delay(3000);
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
-
   // ensure light sleep after disconnect
   isAwake = timeAwake + 1;
 }

@@ -11,7 +11,7 @@ Instructions if you are new to Arduino:<br>
 <br>
 3. In config.h, replace the 4 placeholder variables with your info, see comments for details
 <br>
-4. In wifiTime, there may be features commented out. I need time to compartmentalize the code. Thanks for your patience.
+4. Still working..
 </p>
 
 <p>
