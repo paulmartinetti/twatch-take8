@@ -43,13 +43,9 @@ void getWeather() {
   tft->setCursor(0, 110);
   tft->println(F("Connecting ..."));
 
-  // 
-  while (WiFi.status() != WL_CONNECTED) {
-    // sometimes my watch connects just after this times out
-    delay(30000);
-    tft->setCursor(0, 140);
-    tft->println(F("Unable to connect to WiFi"));
-  }
+  // delay()s in this while function do not work as intended
+  // planning to redo wifi code here..
+  while (WiFi.status() != WL_CONNECTED) {}
 
   // WiFi get official time (from Arduino TimeSynchronization sample)
   const char* ntpServer = "pool.ntp.org";
