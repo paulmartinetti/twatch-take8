@@ -4,7 +4,7 @@
 Author - experienced dad and programmer, new to Arduino, C++, got a couple ttgo 2020s for my 12 yo son and me. We like the retro look. A flick of the wrist wakes up the watch from light sleep. Battery lasts all day. Wifi connection updates time, working on simple weather read-out
 <br>
 <br>
-Instructions if new to Arduino -
+Instructions if you are new to Arduino:<br>
 1. Create a New Folder named WakeupFromSensor2, put all of the repository files in it (.ino and .h files)
 <br>
 2. Open the folder and launch WakeupFromSensor2.ino in the Arduino IDE.
@@ -26,7 +26,7 @@ weaknesses - err checking, compartmentalizing / reusing code, data-types..need t
 </p>
 
 <p>
-vvv--I'm using bits of code from these brilliant folks and resources--vvv<br>
+vvv--I'm using bits of code from these brilliant folks and helpful resources--vvv<br>
 </p>
 
 The "official" watch library<br>
@@ -43,6 +43,14 @@ https://diyprojects.io/t-watch-sleep-and-wake-up-with-bma423-accelerometer-or-es
 <br>
 J Hershey's OpenWeatherOneCall library<br>
 https://github.com/JHershey69/OpenWeatherOneCall 
+<br>
+<br>
+WF Dudley - t-watch 2020<br>
+https://github.com/wfdudley/T-watch-2020
+<br>
+<br>
+Bald Engineer - the F() Macro explained<br>
+https://www.baldengineer.com/arduino-f-macro.html
 <br>
 <br>
 Date time formatting in C++<br>

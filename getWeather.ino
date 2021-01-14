@@ -4,37 +4,54 @@
 #include <ArduinoJson.h>
 #include <string.h>
 
-void appWiFiTime() {
+// JSON size defined
+const size_t capacity = JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + 3 * JSON_OBJECT_SIZE(6) + 2 * JSON_OBJECT_SIZE(8) + JSON_OBJECT_SIZE(14) + 1050;
 
-  const char* ntpServer = "pool.ntp.org";
-  const long  gmtOffset_sec = -18000;
-  const int   daylightOffset_sec = 3600;
 
+// reusable HTTP Client for each api call
+String http(String myUri) {
+
+  // swap myUri for it's return json
+  HTTPClient http;
+
+  http.begin(myUri);
+  int httpCode = http.GET();
+  if (httpCode > 399) {
+    Serial.print("http error");
+    http.end();
+  } else if (httpCode > 0) {
+    // no longer need uri value, so swap w incoming json
+    // (saves memory creating another String)
+    myUri = http.getString();
+  }  else {
+    myUri = "failed";
+  }
+  http.end();
+  return myUri;
+}
+
+void getWeather() {
+
+  // connect to WiFi
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
-  // wifi screen
+  // display WiFi status on watch
   tft->fillScreen(TFT_BLACK);
   //tft->setTextFont(2);
   tft->setTextSize(2);
   tft->setCursor(0, 110);
   tft->println(F("Connecting ..."));
-  uint8_t tries = 0;
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(200);
-    tries++;
-    if (tries > 20) {
-      tft->fillScreen(TFT_BLACK);
-      tft->setTextSize(2);
-      tft->setCursor(0, 110);
-      tft->println(F("Unable to connect to WiFi"));
-      delay(3000);
-      WiFi.disconnect(true); // --this doesn't work right, it just hangs...looking into it
-      WiFi.mode(WIFI_OFF);
-      isAwake = timeAwake+1; // back to light sleep
-    }
-  }
 
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(20000);
+    tft->println(F("Unable to connect to WiFi"));
+  }
+  const char* ntpServer = "pool.ntp.org";
+  const long  gmtOffset_sec = -18000;
+  const int   daylightOffset_sec = 3600;
+
+  // might as well update clock while connected to wifi
   configTime(-18000, 3600 , "pool.ntp.org", "time.nis.gov");
   // Connecting...
   delay(3000);
@@ -50,41 +67,26 @@ void appWiFiTime() {
   }
 
   // get location name using latitude / longitude
-  /*HTTPClient http;
-    String locale;
-    //char locationURL[200];
-    http.begin(regionURL);
-    int httpCode = http.GET();
-    if (httpCode > 399) {
-    Serial.print("http error");
-    http.end();
-    } else if (httpCode > 0) {
-    locale = http.getString();
-    //Serial.print(locale);
-    }  else {
-    Serial.print("get failed");
-    }
-    http.end();*/
+  String locale = http(regionURL);
 
   // weather
-  const size_t capacity = JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + 3 * JSON_OBJECT_SIZE(6) + 2 * JSON_OBJECT_SIZE(8) + JSON_OBJECT_SIZE(14) + 1050;
-  /*DynamicJsonDocument doc(capacity);
+  DynamicJsonDocument doc(capacity);
 
-    // from this source, only interested in locality name
-    StaticJsonDocument<200> filter;
-    filter["locality"] = true;
-    DeserializationError err = deserializeJson(doc, locale, DeserializationOption::Filter(filter));
+  // from this source, only interested in locality name
+  StaticJsonDocument<200> filter;
+  filter["locality"] = true;
+  DeserializationError err = deserializeJson(doc, locale, DeserializationOption::Filter(filter));
 
-    char city[60] = {NULL};
-    if (doc["locality"]) {
+  char city[60] = {NULL};
+  if (doc["locality"]) {
     strncpy(city, doc["locality"], 60);
-    } else {
+  } else {
     Serial.print(err.c_str());
-    }
-    //Serial.print(city);
-    tft->setCursor(0, 120);
-    tft->println(city);
-    // city from bigdata*/
+  }
+  //Serial.print(city);
+  tft->setCursor(0, 120);
+  tft->println(city);
+  // city from bigdata
   delay(1000);
   tft->setCursor(0, 170);
   tft->println(F("Checking weather..."));
@@ -92,21 +94,8 @@ void appWiFiTime() {
 
   //========= weather api call, new http client bc haven't figured out how to reset
   // get weather name using latitude / longitude
-  String weather;
-  //char locationURL[200];
-  HTTPClient http2;
-  http2.begin(oweatherURL);
-  int httpCode = http2.GET();
-  if (httpCode > 399) {
-    Serial.print("http error");
-    http2.end();
-  } else if (httpCode > 0) {
-    weather = http2.getString();
-    Serial.println(weather);
-  }  else {
-    Serial.print("get failed");
-  }
-  http2.end();
+  String weather = http(oweatherURL);
+
   // parse
   DynamicJsonDocument doc2(capacity);
 
@@ -203,5 +192,5 @@ void appWiFiTime() {
   WiFi.mode(WIFI_OFF);
 
   // ensure light sleep after disconnect
-  isAwake = timeAwake+1;
+  isAwake = timeAwake + 1;
 }

@@ -151,8 +151,7 @@ void loop() {
       int16_t x, y;
       if (watch->getTouch(x, y)) {
         //Serial.println("touched");
-        appWiFiTime();
-        //getWeather();
+        getWeather();
       }
       // count to about 3 seconds (delay 3000)
       isAwake += 1;
