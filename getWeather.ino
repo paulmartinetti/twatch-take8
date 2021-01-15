@@ -4,9 +4,11 @@
 #include <ArduinoJson.h>
 #include <string.h>
 
-// JSON size defined
-const size_t capacity = JSON_ARRAY_SIZE(4) + JSON_ARRAY_SIZE(5) + JSON_OBJECT_SIZE(2) + 2 * JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(5) + 3 * JSON_OBJECT_SIZE(6) + 2 * JSON_OBJECT_SIZE(8) + JSON_OBJECT_SIZE(14) + 1050;
-
+// JSON size defined for largest of api call jsons (currently localeJson, see below)
+// I started with the capacity value from JHershey's Oweather, which works.
+// Then I copied the actual json from the serial monitor and pasted it here:
+// https://arduinojson.org/v6/assistant/
+const size_t capacity = 2048;
 
 // reusable HTTP Client for each api call
 String http(String myUri) {
