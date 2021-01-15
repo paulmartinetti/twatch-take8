@@ -24,5 +24,6 @@ const char* regionURL = "https://api.bigdatacloud.net/data/reverse-geocode-clien
 // 4. Your lat, lon, and and API key
 // -- replace YOUR_LATITUDE in this url with your latitude (for example 29.02355)
 // -- replace YOUR_LONGITUDE in this url with your longitude value (for example -61.994561)
-// -- contact openweathermap to get an api key and replace YOUR_API_KEY with your key which looks like abc131cba38abc321abc987abc334
-const char* oweatherURL = "http://api.openweathermap.org/data/2.5/weather?lat=YOUR_LATITUDE&lon=YOUR_LONGITUDE&units=metric&appid=YOUR_API_KEY";
+// -- contact openweathermap to get an api key and replace YOUR_API_KEY at the end ----> with your key which looks like abc131cba38abc321abc987abc334
+// -- you can tweak the uri at https://openweathermap.org/api/one-call-api
+const char* oweatherURL = "http://api.openweathermap.org/data/2.5/onecall?lat=YOUR_LATITUDE&lon=YOUR_LONGITUDE&units=metric&exclude=minutely,hourly,alerts&appid=YOUR_API_KEY";

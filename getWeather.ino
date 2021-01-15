@@ -72,7 +72,7 @@ void getWeather() {
   // use http client function above to get json of my region (var from config.h)
   String localeJson = http(regionURL);
   // check out json to find filter keys for desired values
-  Serial.print(localeJson);
+  //Serial.print(localeJson);
 
   // parse locale json into var called "doc" for document
   DynamicJsonDocument doc(capacity);
@@ -101,14 +101,14 @@ void getWeather() {
 
   // using reusable http client, get weather json name using latitude / longitude (from config.h)
   String weatherJson = http(oweatherURL);
-  //Serial.print(F(weatherJson));
+  Serial.print(weatherJson);
 
   // parse weather json into doc2
   DynamicJsonDocument doc2(capacity);
 
   // organize weather data
   struct myTemp {
-    float temp;
+    char main[60]= {NULL};
     float feels;
     float tMax;
     float humidity;
@@ -119,55 +119,57 @@ void getWeather() {
   MyTemp myTemp;
 
   // from this source, filter wanted info
+  // to make this filter, I pasted the json from serial monitor
+  // here http://jsonformatter.curiousconcept.com/
   StaticJsonDocument<200> filter2;
-  filter2["main"]["temp"] = true;
-  filter2["main"]["feels_like"] = true;
-  filter2["main"]["temp_max"] = true;
-  filter2["main"]["humidity"] = true;
-  filter2["wind"]["speed"] = true;
-  filter2["clouds"]["all"] = true;
+  filter2["daily"][0]["weather"][0]["main"] = true;
+  filter2["current"]["feels_like"] = true;
+  filter2["daily"][0]["temp"]["max"] = true;
+  filter2["current"]["humidity"] = true;
+  filter2["current"]["wind_speed"] = true;
+  filter2["current"]["clouds"] = true;
   // de-serialize
   DeserializationError err2 = deserializeJson(doc2, weatherJson, DeserializationOption::Filter(filter2));
 
   // capture available values using keys
   // (hoping to find a way to loop this!)
-  if (doc2["main"]["temp"]) {
-    myTemp.temp = doc2["main"]["temp"];
+  if (doc2["daily"][0]["weather"][0]["main"]) {
+    strncpy(myTemp.main, doc2["daily"][0]["weather"][0]["main"], 60);
   } else {
-    Serial.print("temp "); Serial.println(err2.c_str());
+    Serial.print("Main "); Serial.println(err2.c_str());
   }
 
   // feels like
-  if (doc2["main"]["feels_like"]) {
-    myTemp.feels = doc2["main"]["feels_like"];
+  if (doc2["current"]["feels_like"]) {
+    myTemp.feels = doc2["current"]["feels_like"];
   } else {
     Serial.print("feels like "); Serial.println(err2.c_str());
   }
 
   // temp max -- not a forecast but the high temp du jour
-  if (doc2["main"]["temp_max"]) {
-    myTemp.tMax = doc2["main"]["temp_max"];
+  if (doc2["daily"][0]["temp"]["max"]) {
+    myTemp.tMax = doc2["daily"][0]["temp"]["max"];
   } else {
-    Serial.print("temp max "); Serial.println(err2.c_str());
+    Serial.print("forecast max"); Serial.println(err2.c_str());
   }
 
   // humidity
-  if (doc2["main"]["humidity"]) {
-    myTemp.humidity = doc2["main"]["humidity"];
+  if (doc2["current"]["humidity"]) {
+    myTemp.humidity = doc2["current"]["humidity"];
   } else {
     Serial.print("humidity "); Serial.println(err2.c_str());
   }
 
   // wind speed
-  if (doc2["wind"]["speed"]) {
-    myTemp.wind = doc2["wind"]["speed"];
+  if (doc2["current"]["wind_speed"]) {
+    myTemp.wind = doc2["current"]["wind_speed"];
   } else {
     Serial.print("wind "); Serial.println(err2.c_str());
   }
 
   // clouds
-  if (doc2["clouds"]["all"]) {
-    myTemp.clouds = doc2["clouds"]["all"];
+  if (doc2["current"]["clouds"]) {
+    myTemp.clouds = doc2["current"]["clouds"];
   } else {
     Serial.print("clouds "); Serial.println(err2.c_str());
   }
@@ -176,7 +178,7 @@ void getWeather() {
   tft->fillScreen(TFT_BLACK);
   tft->setCursor(0, 10);
   tft->println("Weather");
-  tft->print("Temp: "); tft->println(myTemp.temp);
+  tft->print("Mainly: "); tft->println(myTemp.main);
   tft->println(" ");
   tft->print("Real feel: "); tft->println(myTemp.feels);
   tft->println(" ");
