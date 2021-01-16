@@ -38,7 +38,7 @@ void displayTime(boolean fullUpdate) {
 
     // tft->drawString("88:88", xpos, ypos, 7);
     tft->fillScreen(TFT_BLACK);
-    tft->setTextColor(wColor); // Orange
+    tft->setTextColor(wColor);
 
     // draw hours
     if (hh < 10) xpos += tft->drawChar('0', xpos, ypos, 7);
@@ -54,6 +54,7 @@ void displayTime(boolean fullUpdate) {
   }
 
   // check battery %
+  tft->setTextFont(1);
   tft->setTextSize(2);
   int pct = power->getBattPercentage();
   tft->setCursor(10, 10);
