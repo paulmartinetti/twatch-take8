@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include "time.h"
+#include "Free_Fonts.h"
 
 void wifiConnect() {
   // connect to WiFi
@@ -8,8 +9,9 @@ void wifiConnect() {
 
   // display WiFi status on watch
   tft->fillScreen(TFT_BLACK);
-  //tft->setTextFont(2); -- too big, still testing free fonts..
-  tft->setTextSize(2);
+  // Free fonts -- still not UTF-8 **
+  tft->setFreeFont(FSS9);
+  tft->setTextSize(1);
   tft->setCursor(0, 110);
   tft->println(F("Connecting ..."));
 
@@ -52,7 +54,7 @@ void wifiConnect() {
 void endWifi() {
   // end awake session
   tft->fillScreen(TFT_BLACK);
-  tft->setCursor(0, 210);
+  tft->setCursor(10, 210);
   tft->println(F("Disconnecting ..."));
   delay(3000);
   WiFi.disconnect(true);

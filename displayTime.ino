@@ -14,7 +14,7 @@ void displayTime(boolean fullUpdate) {
 
   unsigned int louHex = 0xFBE0; // Louis = orange
   unsigned int pHex = TFT_GREEN; // Paul = cyan
-  unsigned int wColor = louHex;
+  unsigned int wColor = pHex;
   //Serial.println(40);
 
   // format month to 3 letters

@@ -14,6 +14,10 @@ BMA *sensor;
 
 // for api calls, json capacity
 // currently used in getWeather, getFrenchExpression
+// JSON size defined for largest of api call jsons (currently localeJson, see below)
+// I started with the capacity value from JHershey's Oweather, which works.
+// Then I copied the actual json from the serial monitor and pasted it here:
+// https://arduinojson.org/v6/assistant/
 size_t capacity = 2048;
 
 // timer to capture wrist flick

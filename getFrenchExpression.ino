@@ -2,11 +2,6 @@
 #include <ArduinoJson.h>
 #include <string.h>
 
-// JSON size defined for largest of api call jsons (currently localeJson, see below)
-// I started with the capacity value from JHershey's Oweather, which works.
-// Then I copied the actual json from the serial monitor and pasted it here:
-// https://arduinojson.org/v6/assistant/
-
 void getFrenchExpression() {
   // start get French
   tft->setCursor(0, 210);
@@ -48,7 +43,7 @@ void getFrenchExpression() {
 
   // display on watch
   tft->fillScreen(TFT_BLACK);
-  tft->setCursor(0, 10);
+  tft->setCursor(5, 20);
   tft->println("Expression");
   tft->println(" ");
   tft->println(frExp);

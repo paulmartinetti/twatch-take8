@@ -116,7 +116,7 @@ void getWeather() {
 
   //Serial.print(myTemp);
   tft->fillScreen(TFT_BLACK);
-  tft->setCursor(0, 10);
+  tft->setCursor(5, 10);
   tft->println("Weather");
   tft->print("Mainly: "); tft->println(myTemp.main);
   tft->println(" ");
