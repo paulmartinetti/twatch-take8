@@ -1,7 +1,7 @@
 <p>Repository name - WakeupFromSensor2</p>
 
 <p>
-Author - experienced dad and programmer, new to Arduino, C++, got a couple ttgo 2020s for my 12 yo son and me. We like the retro look. A flick of the wrist wakes up the watch from light sleep. Battery lasts all day. Wifi connection updates time, working on simple weather read-out
+Author - experienced dad and programmer, new to Arduino, C++, got a couple ttgo 2020s for my 12 yo son and me. We like the retro look. A flick of the wrist wakes up the watch from light sleep. Battery lasts all day. While awake, if screen is touched, Wifi connection updates time, then displays weather in a text readout, then back to sleep
 <br>
 <br>
 Instructions if you are new to Arduino:<br>
@@ -9,10 +9,8 @@ Instructions if you are new to Arduino:<br>
 <br>
 2. Open the folder and launch WakeupFromSensor2.ino in the Arduino IDE.
 <br>
-3. In config.h, replace the 4 placeholder variables with your info, see comments for details
+3. In config.h, to connect to wifi and check weather, replace the 4 placeholder variables with your info, see comments for details
 <br>
-4. Still working..
-</p>
 
 <p>
 Video demo<br>
@@ -54,5 +52,8 @@ https://www.baldengineer.com/arduino-f-macro.html
 <br>
 <br>
 Date time formatting in C++<br>
-http://www.cplusplus.com/reference/ctime/strftime/
+http://www.cplusplus.com/reference/ctime/strftime/<br>
+<br>
+Data types in C++<br>
+https://www.tutorialspoint.com/cplusplus/cpp_data_types.htm
 </p>

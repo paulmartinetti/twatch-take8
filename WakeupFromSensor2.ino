@@ -12,6 +12,10 @@ TFT_eSPI *tft;
 AXP20X_Class *power;
 BMA *sensor;
 
+// for api calls, json capacity
+// currently used in getWeather, getFrenchExpression
+size_t capacity = 2048;
+
 // timer to capture wrist flick
 // loop counter
 unsigned int ctCur = 0;
@@ -151,7 +155,7 @@ void loop() {
       int16_t x, y;
       if (watch->getTouch(x, y)) {
         //Serial.println("touched");
-        getWeather();
+        wifiConnect();
       }
       // count to about 3 seconds (delay 3000)
       isAwake += 1;

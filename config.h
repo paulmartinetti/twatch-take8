@@ -27,3 +27,8 @@ const char* regionURL = "https://api.bigdatacloud.net/data/reverse-geocode-clien
 // -- contact openweathermap to get an api key and replace YOUR_API_KEY at the end ----> with your key which looks like abc131cba38abc321abc987abc334
 // -- you can tweak the uri at https://openweathermap.org/api/one-call-api
 const char* oweatherURL = "http://api.openweathermap.org/data/2.5/onecall?lat=YOUR_LATITUDE&lon=YOUR_LONGITUDE&units=metric&exclude=minutely,hourly,alerts&appid=YOUR_API_KEY";
+
+// 5. WORK in progress - not connected, just backing up
+// I'm using https://sheetdb.io to make a REST API with my Google Sheet that has expressions in French and English
+// THIS WILL NOT WORK, but you can follow the code to get data from an api of your choice
+String frURL = "";
