@@ -48,7 +48,7 @@ void getWeather() {
 
   // organize weather data
   struct myTemp {
-    char main[60]= {NULL};
+    char main[60] = {NULL};
     float feels;
     float tMax;
     float humidity;
@@ -129,10 +129,9 @@ void getWeather() {
   tft->print("Wind: "); tft->println(myTemp.wind);
   tft->println(" ");
   tft->print("Clouds: "); tft->println(myTemp.clouds);
-  tft->println(" ");
 
-  // hold to read weather
   delay(6000);
+  //getFrenchExpression();
 
   // end wifi (currently supports viewing one api at a time..no nav yet)
   endWifi();

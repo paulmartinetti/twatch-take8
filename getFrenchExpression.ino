@@ -9,18 +9,18 @@
 
 void getFrenchExpression() {
   // start get French
-  tft->setCursor(0, 170);
+  tft->setCursor(0, 210);
   tft->println(F("Getting French..."));
   delay(2000);
-  
+
   // using sheetdb.io for REST API to my google sheet containing French and English expressions
   // offset value in uri is rowNum-1
 
   // pick a random number
   unsigned short int randFr = random(1, 11400);
   // create uri (have to learn how to concatenate char* values..
-  String myUri = frURL+"?limit=1&offset="+randFr;
-  
+  String myUri = frURL + "?limit=1&offset=" + randFr;
+
   // get json from my google sheet using function in wifiConnect
   String frJson = http(myUri);
   // parse locale json into var called "doc" for document
@@ -28,12 +28,13 @@ void getFrenchExpression() {
   DeserializationError err = deserializeJson(doc, frJson);
 
   // store fr and en for watch display
-  char frExp[60];
+  String frExp;
   char enExp[60];
 
-  // confirm
+  // confirm -- still looking for UTF-8 font setup
   if (doc[0]["french"]) {
-    strncpy(frExp, doc[0]["french"], 60);
+    // explains .as<String>() syntax https://arduinojson.org/v6/api/config/enable_arduino_string/
+    frExp = doc[0]["french"].as<String>();
     //Serial.print(frExp);
   } else {
     Serial.println(err.c_str());

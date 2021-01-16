@@ -106,10 +106,11 @@ void setup() {
   // Enable BMA423 accelerometer
   sensor->enableAccel();
 
-  // countdown
+  // to sleep
   tft->setTextColor(TFT_GREEN);
   delay(2000);
-  tft->println("Sleep now ...");
+  tft->setCursor(10, 120);
+  tft->println("To sleep now...");
   delay(1000);
   lightSleep();
 }

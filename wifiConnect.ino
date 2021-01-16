@@ -51,7 +51,8 @@ void wifiConnect() {
 }
 void endWifi() {
   // end awake session
-  tft->setCursor(0, 220);
+  tft->fillScreen(TFT_BLACK);
+  tft->setCursor(0, 210);
   tft->println(F("Disconnecting ..."));
   delay(3000);
   WiFi.disconnect(true);
