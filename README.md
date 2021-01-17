@@ -31,6 +31,11 @@ The "official" watch library<br>
 https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library
 <br>
 <br>
+Fonts to support glyphs and latin characters<br>
+In the ttgo library, it's in examples > U8g2_for_TFT_eSPI > Unicode<br>
+https://github.com/olikraus/u8g2/wiki
+<br>
+<br>
 Dan Geiger's watch code<br>
 https://www.instructables.com/Lilygo-T-Watch-2020-Arduino-Framework/
 <br>

@@ -1,7 +1,4 @@
-// The basic Time Display GUI
-// if you are just updating the colon, fullUpdate =0
-// if you want to update the complete display, fullUpdate =1
-// This helps reduce flicker
+
 
 #include <time.h>
 
@@ -11,11 +8,6 @@ void displayTime(boolean fullUpdate) {
 
   byte xpos = 40; // Starting position for the display
   byte ypos = 90;
-
-  unsigned int louHex = 0xFBE0; // Louis = orange
-  unsigned int pHex = TFT_GREEN; // Paul = cyan
-  unsigned int wColor = pHex;
-  //Serial.println(40);
 
   // format month to 3 letters
   String monthThree[] = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
@@ -30,15 +22,13 @@ void displayTime(boolean fullUpdate) {
   mmonth = tnow.month;
   yyear = tnow.year;
 
-  tft->setTextSize(1); // normal size. 2 is double
-
   if (fullUpdate) {
     // Font 7 is a 7-segment display and only contains
     // characters [space] 0 1 2 3 4 5 6 7 8 9 0 : .
 
     // tft->drawString("88:88", xpos, ypos, 7);
     tft->fillScreen(TFT_BLACK);
-    tft->setTextColor(wColor);
+    tft->setTextSize(1);
 
     // draw hours
     if (hh < 10) xpos += tft->drawChar('0', xpos, ypos, 7);
@@ -54,15 +44,15 @@ void displayTime(boolean fullUpdate) {
   }
 
   // check battery %
-  tft->setTextFont(1);
+  tft->setTextFont(2);
   tft->setTextSize(2);
   int pct = power->getBattPercentage();
-  tft->setCursor(10, 10);
+  tft->setCursor(10, 5);
   tft->print("Battery: "); tft->print(pct); tft->println(" %");
 
   // date
-  tft->setTextSize(3);
-  tft->setCursor( 10, 210);
+  //tft->setTextSize(2);
+  tft->setCursor( 10, 205);
   tft->print(dday);
   tft->print("-");
   tft->print(monthThree[mmonth - 1]);

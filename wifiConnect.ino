@@ -1,6 +1,6 @@
 #include <WiFi.h>
+#include <HTTPClient.h>
 #include "time.h"
-#include "Free_Fonts.h"
 
 void wifiConnect() {
   // connect to WiFi
@@ -9,10 +9,8 @@ void wifiConnect() {
 
   // display WiFi status on watch
   tft->fillScreen(TFT_BLACK);
-  // Free fonts -- still not UTF-8 **
-  tft->setFreeFont(FSS9);
-  tft->setTextSize(1);
-  tft->setCursor(0, 110);
+  //tft->setTextSize(1);
+  tft->setCursor(0, 100);
   tft->println(F("Connecting ..."));
 
   // delay()s in this while function do not work as intended
@@ -34,7 +32,7 @@ void wifiConnect() {
     tft->drawString("Failed to update time",  5, 30, 1);
   } else {
     tft->fillScreen(TFT_BLACK);
-    tft->setCursor(0, 30);
+    tft->setCursor(5, 10);
     tft->print(&timeinfo, "%A\n%d-%b-%Y\n%Hh%M");
     watch->rtc->setDateTime(timeinfo.tm_year, timeinfo.tm_mon + 1, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
   }
@@ -48,13 +46,14 @@ void wifiConnect() {
    * 
    * 
   */
-  getWeather();
-  //getFrenchExpression();
+  //getWeather();
+  getFrenchExpression();
 }
 void endWifi() {
   // end awake session
   tft->fillScreen(TFT_BLACK);
-  tft->setCursor(10, 210);
+  tft->setTextSize(2);
+  tft->setCursor(10, 200);
   tft->println(F("Disconnecting ..."));
   delay(3000);
   WiFi.disconnect(true);

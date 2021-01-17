@@ -3,7 +3,6 @@
    use wrist lift, double click to wake up
    Copyright 2020 Lewis he
 */
-
 #include "config.h"
 #include <soc/rtc.h>
 
@@ -18,7 +17,7 @@ BMA *sensor;
 // I started with the capacity value from JHershey's Oweather, which works.
 // Then I copied the actual json from the serial monitor and pasted it here:
 // https://arduinojson.org/v6/assistant/
-size_t capacity = 2048;
+size_t capacity = 1024;
 
 // timer to capture wrist flick
 // loop counter
@@ -30,11 +29,12 @@ int mvFwd = 0;
 
 // Using isAwake to control state and wake time
 /**
- * 0 = light sleep
- * <30 = awake for 3 seconds, listen to touch
- * >= 30 = trigger sleep
- *
- */
+   0 = light sleep
+   <30 = awake for 3 seconds, listen to touch
+   >= 30 = trigger sleep
+
+*/
+
 uint8_t isAwake = 0;
 
 // TO KEEP AWAKE LONGER - increase this value to 50 or 90 for example
@@ -111,11 +111,12 @@ void setup() {
   sensor->enableAccel();
 
   // to sleep
-  tft->setTextColor(TFT_GREEN);
-  delay(2000);
-  tft->setCursor(10, 120);
-  tft->println("To sleep now...");
+  tft->setTextColor(TFT_CYAN);
   delay(1000);
+  tft->setCursor(10, 100);
+  tft->setTextSize(2);
+  tft->println("To sleep now...");
+  delay(2000);
   lightSleep();
 }
 
@@ -152,10 +153,10 @@ void loop() {
       displayTime(true);
       isAwake += 1;
     }
-    // 2. TOUCH LISTEN - during 3s wake time, 
+    // 2. TOUCH LISTEN - during 3s wake time,
     // when we write if(isAwake) that is asking if isAwake is true or >0
     if (isAwake && isAwake < timeAwake) {
-      
+
       // listen for touch only while awake
       int16_t x, y;
       if (watch->getTouch(x, y)) {

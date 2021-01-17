@@ -1,6 +1,5 @@
-#include <HTTPClient.h>
 #include <ArduinoJson.h>
-#include <string.h>
+//#include <string.h>
 
 // JSON size defined for largest of api call jsons (currently localeJson, see below)
 // I started with the capacity value from JHershey's Oweather, which works.

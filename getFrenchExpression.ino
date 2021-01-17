@@ -1,14 +1,18 @@
-#include <HTTPClient.h>
 #include <ArduinoJson.h>
-#include <string.h>
+
+// U8g2 font instancefonts for French characters
+U8G2_FOR_ADAFRUIT_GFX u8f;
 
 void getFrenchExpression() {
+  // connect u8g2 procedures to TFT_eSPI
+  u8f.begin(*tft);
+
   // start get French
-  tft->setCursor(0, 210);
+  tft->setCursor(0, 200);
   tft->println(F("Getting French..."));
   delay(2000);
 
-  // using sheetdb.io for REST API to my google sheet containing French and English expressions
+  // using https://sheetdb.io for REST API to my google sheet containing French and English expressions
   // offset value in uri is rowNum-1
 
   // pick a random number
@@ -43,13 +47,18 @@ void getFrenchExpression() {
 
   // display on watch
   tft->fillScreen(TFT_BLACK);
-  tft->setCursor(5, 20);
-  tft->println("Expression");
-  tft->println(" ");
-  tft->println(frExp);
-  tft->println(" ");
-  tft->println(" ");
-  tft->println(enExp);
+  u8f.setFontDirection(0);            // left to right (this is default)
+  u8f.setForegroundColor(TFT_CYAN);  // apply color
+  u8f.setFont(u8g2_font_10x20_tf);     // extended font
+  u8f.setFontMode(1);                 // use u8g2 transparent mode (this is default)
+
+  u8f.setCursor(5, 20);
+  u8f.println("Expression");
+  u8f.println(" ");
+  u8f.println(frExp);
+  u8f.println(" ");
+  u8f.println(" ");
+  u8f.println(enExp);
 
   // hold to read expression
   delay(6000);
