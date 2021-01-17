@@ -60,8 +60,23 @@ void getFrenchExpression() {
   u8f.println(" ");
   u8f.println(enExp);
 
-  // hold to read expression
-  delay(6000);
+  // continue to weather or not
+  delay(2000);
+  u8f.println("");
+  u8f.println("");
+  u8f.println("Touche pour la météo");
+
+// hold to read expression
+  // listen for weather touch
+  int16_t x, y;
+  unsigned short int i;
+  for (i=0;i<600;i++){
+    if (watch->getTouch(x, y)) {
+      getWeather();
+      return;      
+    }
+    delay(10);
+  }
 
   // end wifi (currently supports viewing one api at a time..no nav yet)
   endWifi();

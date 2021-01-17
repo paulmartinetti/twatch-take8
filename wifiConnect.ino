@@ -46,16 +46,17 @@ void wifiConnect() {
    * 
    * 
   */
-  //getWeather();
-  getFrenchExpression();
+  delay(2000);
+  getWeather();
+  //getFrenchExpression();
 }
 void endWifi() {
   // end awake session
-  tft->fillScreen(TFT_BLACK);
+  //tft->fillScreen(TFT_BLACK);
   tft->setTextSize(2);
   tft->setCursor(10, 200);
   tft->println(F("Disconnecting ..."));
-  delay(3000);
+  delay(1000);
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
   // ensure light sleep after disconnect

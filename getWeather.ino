@@ -28,7 +28,8 @@ void getWeather() {
     Serial.print(err.c_str());
   }
   //Serial.print(city);
-  tft->setCursor(0, 120);
+  tft->fillScreen(TFT_BLACK);
+  tft->setCursor(0, 10);
   tft->println(city);
   // city from bigdata
   delay(1000);
@@ -40,7 +41,7 @@ void getWeather() {
 
   // using reusable http client, get weather json name using latitude / longitude (from config.h)
   String weatherJson = http(oweatherURL);
-  Serial.print(weatherJson);
+  //Serial.print(weatherJson);
 
   // parse weather json into doc2
   DynamicJsonDocument doc2(capacity);
@@ -115,6 +116,8 @@ void getWeather() {
 
   //Serial.print(myTemp);
   tft->fillScreen(TFT_BLACK);
+  tft->setTextFont(1);
+  tft->setTextSize(2);
   tft->setCursor(5, 10);
   tft->println("Weather");
   tft->print("Mainly: "); tft->println(myTemp.main);

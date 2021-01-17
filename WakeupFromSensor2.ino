@@ -1,4 +1,4 @@
-/*
+ /*
    WakeupFormSensor: Use BMA423 external interrupt to wake up T-Watch. By default,
    use wrist lift, double click to wake up
    Copyright 2020 Lewis he
@@ -116,7 +116,7 @@ void setup() {
   tft->setCursor(10, 100);
   tft->setTextSize(2);
   tft->println("To sleep now...");
-  delay(2000);
+  delay(1000);
   lightSleep();
 }
 
