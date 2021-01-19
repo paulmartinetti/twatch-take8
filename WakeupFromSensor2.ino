@@ -1,10 +1,9 @@
- /*
+/*
    WakeupFormSensor: Use BMA423 external interrupt to wake up T-Watch. By default,
    use wrist lift, double click to wake up
    Copyright 2020 Lewis he
 */
 #include "config.h"
-#include <soc/rtc.h>
 
 TTGOClass *watch;
 TFT_eSPI *tft;

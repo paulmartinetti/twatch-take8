@@ -1,6 +1,5 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include "time.h"
 
 void wifiConnect() {
   // connect to WiFi
@@ -13,9 +12,14 @@ void wifiConnect() {
   tft->setCursor(0, 100);
   tft->println(F("Connecting ..."));
 
-  // delay()s in this while function do not work as intended
-  // planning to redo wifi code here..
-  while (WiFi.status() != WL_CONNECTED) {}
+  // cancel if failed WiFi
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    tft->setCursor(0, 140);
+    tft->println("WiFi failed.");
+    delay(2000);
+    endWifi();
+    return;
+  }
 
   // WiFi get official time (from Arduino TimeSynchronization sample)
   const char* ntpServer = "pool.ntp.org";
@@ -38,13 +42,13 @@ void wifiConnect() {
   }
 
   /**
-   * 
-   * connect to apis -- control which api
-   * 
-   * NOTE getFrenchExpression is a private api call
-   * --use the code as an example to load data from an api of your choice
-   * 
-   * 
+
+     connect to apis -- control which api
+
+     NOTE getFrenchExpression is a private api call
+     --use the code as an example to load data from an api of your choice
+
+
   */
   delay(2000);
   getWeather();
@@ -54,7 +58,7 @@ void endWifi() {
   // end awake session
   //tft->fillScreen(TFT_BLACK);
   tft->setTextSize(2);
-  tft->setCursor(10, 200);
+  tft->setCursor(0, 200);
   tft->println(F("Disconnecting ..."));
   delay(1000);
   WiFi.disconnect(true);

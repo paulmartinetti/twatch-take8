@@ -1,6 +1,5 @@
-
-
 #include <time.h>
+#include <soc/rtc.h>
 
 byte xcolon = 0; // location of the colon
 

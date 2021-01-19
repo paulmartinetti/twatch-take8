@@ -7,6 +7,7 @@
 
 #include <LilyGoWatch.h>
 
+
 // 1. Replace values here with WIFI ssid and PW
 const char* ssid = "YOUR WIFI SSID";
 const char* password = "YOUR WIFI PW";

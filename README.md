@@ -9,7 +9,7 @@ Instructions if you are new to Arduino:<br>
 <br>
 2. Open the folder and launch WakeupFromSensor2.ino in the Arduino IDE.
 <br>
-3. In config.h, to connect to wifi and check weather, replace the 4 placeholder variables with your info, see comments for details
+3. DETAILS here --> config.h, to connect to wifi and check weather, replace the 4 placeholder variables with your info, see comments for details
 <br>
 
 <p>
@@ -31,8 +31,9 @@ The "official" watch library<br>
 https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library
 <br>
 <br>
-Fonts to support glyphs and latin characters<br>
+Fonts to support glyphs and latin characters--no line wrapping fn however<br>
 In the ttgo library, it's in examples > U8g2_for_TFT_eSPI > Unicode<br>
+https://www.arduino.cc/reference/en/libraries/u8g2_for_adafruit_gfx/<br>
 https://github.com/olikraus/u8g2/wiki
 <br>
 <br>
