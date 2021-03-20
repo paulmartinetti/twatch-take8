@@ -10,6 +10,7 @@ TFT_eSPI *tft;
 AXP20X_Class *power;
 BMA *sensor;
 
+
 // for api calls, json capacity
 // currently used in getWeather, getFrenchExpression
 // JSON size defined for largest of api call jsons (currently localeJson, see below)
@@ -18,27 +19,9 @@ BMA *sensor;
 // https://arduinojson.org/v6/assistant/
 size_t capacity = 1024;
 
-// timer to capture wrist flick
-// loop counter
-unsigned int ctCur = 0;
-// bma negative y value from flicking wrist back
-int mvBack = 0;
-// bma positive y value from returning wrist quickly to normal
-int mvFwd = 0;
-
-// Using isAwake to control state and wake time
-/**
-   0 = light sleep
-   <30 = awake for 3 seconds, listen to touch
-   >= 30 = trigger sleep
-
-*/
-
 uint8_t isAwake = 0;
-
-// TO KEEP AWAKE LONGER - increase this value to 50 or 90 for example
-// 30 = about 3 seconds because the loop() delay is 100;
-uint8_t timeAwake = 30;
+// square area where the watch is flat and awake
+uint8_t give = 100;
 
 
 // timepiece
@@ -129,32 +112,21 @@ void loop() {
   if (!res) {
     Serial.println("getAccel FAIL");
   } else {
-    // count
-    ctCur++;
-    int myY = acc.y;
 
-    // collect counter values at wrist flick extremes
-    if (myY < -600) mvBack = ctCur;
-    if (myY > 600 ) mvFwd = ctCur;
-    // subtract the two times gives the speed, the smaller the difference the faster the flick
-    int diff = mvFwd - mvBack;
-    // cancel on random slow movement
-    if (diff > 5) mvBack = mvFwd = 0;
+    int myY = acc.y;
+    int myX = acc.x;
 
     // 1. WAKE ..very limited correct movement along y wakes up, note that !isAwake = 0
-    if (!isAwake && diff == 1) {
+    if (!isAwake && (myX >= -give && myX <= give) && (myY >= -give && myY <= give)) {
       // (Documents > Arduino > T-Watch-Projects-main > 11 wakeup axp202 minimal
       // wake from lightSleep
       wakeFromLightSleep();
-      mvBack = mvFwd = 0;
-      //Serial.print("capte, mvFwd:");Serial.print(mvFwd);
-      //Serial.print("capte, mvBack:");Serial.print(mvBack);
       displayTime(true);
-      isAwake += 1;
+      isAwake = 1;
     }
     // 2. TOUCH LISTEN - during 3s wake time,
     // when we write if(isAwake) that is asking if isAwake is true or >0
-    if (isAwake && isAwake < timeAwake) {
+    if (isAwake) {
 
       // listen for touch only while awake
       int16_t x, y;
@@ -162,22 +134,14 @@ void loop() {
         //Serial.println("touched");
         wifiConnect();
       }
-      // count to about 3 seconds (delay 3000)
-      isAwake += 1;
     }
 
     // 3. TO SLEEP - back to light sleep most of the time
-    if (isAwake >= timeAwake) {
+    if (isAwake && (myX >= -give || myX <= give) && (myY < -give || myY > give)) {
       lightSleep();
       isAwake = 0;
     }
-    //Serial.println(isAwake);
-    //Serial.print(watch->bl->isOn()); // yields 1 (true)
-    //Serial.print(" height:"); Serial.print(tft->height()); // 240
-    //Serial.print(" width:"); Serial.print(tft->width());    // 240
-    //Serial.print(" T:"); Serial.print(ctCur); // float temp = power->getTemp();
-    //Serial.print(" Y:"); Serial.println(myY);
-    //Serial.print(" Battery:"); Serial.println(power->getBattPercentage());
-    delay(100);
+
+    delay(10);
   }
 }

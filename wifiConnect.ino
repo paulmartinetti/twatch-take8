@@ -63,8 +63,6 @@ void endWifi() {
   delay(1000);
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
-  // ensure light sleep after disconnect
-  isAwake = timeAwake + 1;
 }
 
 // reusable HTTP Client for each api call
