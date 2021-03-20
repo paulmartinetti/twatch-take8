@@ -1,7 +1,7 @@
 <p>Repository name - WakeupFromSensor2</p>
 
 <p>
-Author - experienced dad and programmer, new to Arduino, C++, got a couple ttgo 2020s for my 12 yo son and me. We like the retro look. A flick of the wrist wakes up the watch from light sleep. Battery lasts all day. While awake, if screen is touched, Wifi connection updates time, then displays weather in a text readout, then back to sleep
+Author - experienced dad and programmer, new to Arduino, C++, got a couple ttgo 2020s for my 12 yo son and me. We like the retro look. Make the watch level to activate the display. Battery lasts all day. While awake, if screen is touched, Wifi connection updates time, then displays weather in a text readout, then back to sleep
 <br>
 <br>
 Instructions if you are new to Arduino:<br>
@@ -11,11 +11,6 @@ Instructions if you are new to Arduino:<br>
 <br>
 3. DETAILS here --> config.h, to connect to wifi and check weather, replace the 4 placeholder variables with your info, see comments for details
 <br>
-
-<p>
-Video demo<br>
-https://youtu.be/tKbF3VBxxFI<br>
-</p>
 
 <p>
 Repository<br>
